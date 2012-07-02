@@ -64,8 +64,25 @@ class RedisSource
 	 */
 	public function __construct()
 	{
-		$Redis = new Redis();
-		$Redis->connect(Configure::read('Redis.host'), Configure::read('Redis.port'));
+		if (!class_exists('Redis'))
+		{
+			$redisentClass = __DIR__ . DS . 'Vendor' . DS . 'redisent' . DS . 'Redis.php';
+			
+			if (file_exists($redisentClass))
+			{
+				include_once($redisentClass);
+				$Redis = new redisent\Redis('redis:://' . Configure::read('Redis.host') . ':' . Configure::read('Redis.port'));
+			}
+			else throw new RedisClassNotFoundException('API to Redis no found');
+			
+		}
+		else
+		{
+			$Redis = new Redis();
+			$Redis->connect(Configure::read('Redis.host'),  (int) Configure::read('Redis.port'));
+		}
+
+		
 		self::$__redisInstance = $Redis;
 	}
 	
@@ -87,7 +104,7 @@ class RedisSource
 	
 	public function __call($name, $args)
 	{
-		self::_logQuery(array(strtoupper($name) . ' ' . implode(' ', $args)));
+		self::_logQuery(array(strtoupper($name) . ' ' . multi_implode(' ', $args)));
 		return call_user_func_array(array(self::$__redisInstance, $name), $args);
 	}
 	
@@ -115,4 +132,42 @@ class RedisSource
 	{
 		return self::$_logs;
 	}
+}
+
+
+/**
+ *
+ * @package app.Vendor.NoSql
+ */
+class RedisClassNotFoundException extends Exception
+{
+	
+}
+
+
+/**
+ * @source http://php.net/manual/en/function.implode.php
+ *
+ * @param string $glue
+ * @param array $pieces
+ * @return string
+ */
+function multi_implode($glue, $pieces)
+{
+	$string='';
+		
+	if(is_array($pieces))
+	{
+		reset($pieces);
+		while(list($key,$value)=each($pieces))
+		{
+			$string.=$glue.multi_implode($glue, $value);
+		}
+	}
+	else
+	{
+		return $pieces;
+	}
+		
+	return trim($string, $glue);
 }

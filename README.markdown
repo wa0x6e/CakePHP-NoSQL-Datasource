@@ -72,3 +72,9 @@ Main reason I write this layer, instead of using the Redis class direcly, is log
 	$result = $Redis->hget('myFirstKey');
 	
 doesn't let me do that. I you want to view all your nosql queries, see my other plugin, [DebugKitEx](https://github.com/kamisama/DebugKitEx), and extension to the original [debugkit](https://github.com/cakephp/debug_kit) plugin, providing an additional panel for all the nosql queries.
+
+##Changelog
+
+###**v.0.2** [2012-07-02] 
+
+* [new] Fallback to Redisent when PHPRedis is not installed
