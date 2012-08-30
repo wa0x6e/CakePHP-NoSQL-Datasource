@@ -26,114 +26,100 @@
  */
 class RedisSource
 {
-	/**
-	 * Log of queries executed by this DataSource
-	 *
-	 * @var array
-	 */
+
+/**
+ * Log of queries executed by this DataSource
+ *
+ * @var array
+ */
 	protected static $_logs = array();
-	
-	/**
-	 * Maximum number of items in query log
-	 *
-	 * This is to prevent query log taking over too much memory.
-	 *
-	 * @var integer Maximum number of queries in the queries log.
-	 */
+
+/**
+ * Maximum number of items in query log
+ *
+ * This is to prevent query log taking over too much memory.
+ *
+ * @var integer Maximum number of queries in the queries log.
+ */
 	protected static $_maxLogs = 200;
-	
-	/**
-	 * A reference to the physical connection of this DataSource
-	 *
-	 * @var array
-	 */
-	private static $__redisInstance = null;
-	
-	/**
-	 * A singleton reference to this DataSource
-	 *
-	 * This is to prevent creating more than one connection for a same instance
-	 *
-	 * @var array
-	 */
-	private static $__singleton = null;
-	
-	
-	/**
-	 * Instanciate, and create a connection to the datasource server
-	 */
-	public function __construct()
-	{
-		if (!class_exists('Redis'))
-		{
+
+/**
+ * A reference to the physical connection of this DataSource
+ *
+ * @var array
+ */
+	protected static $_redisInstance = null;
+
+/**
+ * A singleton reference to this DataSource
+ *
+ * This is to prevent creating more than one connection for a same instance
+ *
+ * @var array
+ */
+	protected static $_singleton = null;
+
+/**
+ * Instanciate, and create a connection to the datasource server
+ *
+ * @throws RedisClassNotFoundException when the Redis API is not found
+ */
+	public function __construct() {
+		if (!class_exists('Redis')) {
 			$redisentClass = __DIR__ . DS . 'Vendor' . DS . 'redisent' . DS . 'Redis.php';
-			
-			if (file_exists($redisentClass))
-			{
-				include_once($redisentClass);
+
+			if (file_exists($redisentClass)) {
+				include_once $redisentClass;
 				$Redis = new redisent\Redis('redis:://' . Configure::read('Redis.host') . ':' . Configure::read('Redis.port'));
 			}
 			else throw new RedisClassNotFoundException('API to Redis no found');
-			
-		}
-		else
-		{
+		} else {
 			$Redis = new Redis();
-			$Redis->connect(Configure::read('Redis.host'),  (int) Configure::read('Redis.port'));
+			$Redis->connect(Configure::read('Redis.host'),  (int)Configure::read('Redis.port'));
 		}
 
-		
-		self::$__redisInstance = $Redis;
-	}
-	
-	
-	/**
-	 * Return a singleton instance of the datasource
-	 *
-	 * @return RedisSource A reference to this datasource
-	 */
-	public static function getInstance()
-	{
-		if (!self::$__singleton)
-		{
-			self::$__singleton = new RedisSource();
-		}
-		return self::$__singleton;
+		self::$_redisInstance = $Redis;
 	}
 
-	
-	public function __call($name, $args)
-	{
+/**
+ * Return a singleton instance of the datasource
+ *
+ * @return RedisSource A reference to this datasource
+ */
+	public static function getInstance() {
+		if (!self::$_singleton) {
+			self::$_singleton = new RedisSource();
+		}
+		return self::$_singleton;
+	}
+
+	public function __call($name, $args) {
 		self::_logQuery(array(strtoupper($name) . ' ' . multi_implode(' ', $args)));
-		return call_user_func_array(array(self::$__redisInstance, $name), $args);
+		return call_user_func_array(array(self::$_redisInstance, $name), $args);
 	}
-	
-	
-	/**
-	 * Log the query
-	 *
-	 * @param string $log
-	 */
-	protected static function _logQuery($log)
-	{
+
+/**
+ * Log the query
+ *
+ * @param string $log
+ */
+	protected static function _logQuery($log) {
 		self::$_logs[] = $log;
 		if (count(self::$_logs) > self::$_maxLogs) {
 			array_shift(self::$_logs);
 		}
 	}
-	
-	
-	/**
-	 * Return the logs
-	 *
-	 * @return array An array of queries
-	 */
-	public static function logs()
-	{
+
+/**
+ * Return the logs
+ *
+ * @return array An array of queries
+ */
+	public static function logs() {
 		return self::$_logs;
 	}
-}
 
+}
 
 /**
  *
@@ -141,9 +127,7 @@ class RedisSource
  */
 class RedisClassNotFoundException extends Exception
 {
-	
 }
-
 
 /**
  * @source http://php.net/manual/en/function.implode.php
@@ -152,22 +136,16 @@ class RedisClassNotFoundException extends Exception
  * @param array $pieces
  * @return string
  */
-function multi_implode($glue, $pieces)
-{
-	$string='';
-		
-	if(is_array($pieces))
-	{
+function multi_implode($glue, $pieces) {
+	$string = '';
+
+	if (is_array($pieces)) {
 		reset($pieces);
-		while(list($key,$value)=each($pieces))
-		{
-			$string.=$glue.multi_implode($glue, $value);
+		while (list($key, $value) = each($pieces)) {
+			$string .= $glue . multi_implode($glue, $value);
 		}
-	}
-	else
-	{
+	} else {
 		return $pieces;
 	}
-		
 	return trim($string, $glue);
 }
