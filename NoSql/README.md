@@ -75,6 +75,14 @@ doesn't let me do that. I you want to view all your nosql queries, see my other 
 
 ##Changelog
 
+###**v.0.4** [2012-07-02] 
+
+* [new] Fallback to Redisent when PHPRedis is not installed
+
+###**v.0.3** [2012-07-02] 
+
+* [change] Code formatting
+
 ###**v.0.2** [2012-07-02] 
 
 * [new] Fallback to Redisent when PHPRedis is not installed

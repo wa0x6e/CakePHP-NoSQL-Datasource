@@ -12,7 +12,8 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright 	Copyright (c) 2012, Wan Chen aka Kamisama
+ * @author      Wan Qi Chen <kami@kamisama.me>
+ * @copyright   Copyright 2012, Wan Qi Chen <kami@kamisama.me>
  * @link 		https://github.com/kamisama
  * @package 	app.Vendor.NoSql
  * @version 	0.1
@@ -41,7 +42,7 @@ class NoSql
  *
  * @var array
  */
-	private static $__sources = array();
+	protected static $_sources = array();
 
 /**
  * Return a reference to a nosql layer
@@ -51,15 +52,15 @@ class NoSql
  * @throws DataSourceNotFoundException when the datasource doesn't exists
  */
 	public static function __callStatic($name, $args) {
-		if (isset(self::$__sources[$name])) {
-			return self::$__sources[$name]->getInstance();
+		if (isset(self::$_sources[$name])) {
+			return self::$_sources[$name]->getInstance();
 		}
 
 		try {
 			$className = $name . 'Source';
 			self::load($className);
 			$source = $className::getInstance();
-			self::$__sources[$name] = $source;
+			self::$_sources[$name] = $source;
 			return $source;
 		} catch(DataSourceNotFoundException $e) {
 			throw $e;

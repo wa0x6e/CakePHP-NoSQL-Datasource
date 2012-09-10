@@ -12,10 +12,11 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright 	Copyright (c) 2012, Wan Chen aka Kamisama
+ * @author      Wan Qi Chen <kami@kamisama.me>
+ * @copyright   Copyright 2012, Wan Qi Chen <kami@kamisama.me>
  * @link 		https://github.com/kamisama
  * @package 	app.Vendor.NoSql
- * @version 	0.1
+ * @version 	0.4
  * @license 	MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -60,6 +61,22 @@ class RedisSource
 	protected static $_singleton = null;
 
 /**
+ * Total time to execute all queries, in ms
+ *
+ * @since 0.3
+ * @var int
+ */
+	protected static $_totalTime = 0;
+
+/**
+ * Total number of queries
+ *
+ * @since 0.3
+ * @var int
+ */
+	protected static $_totalQueries = 0;
+
+/**
  * Instanciate, and create a connection to the datasource server
  *
  * @throws RedisClassNotFoundException when the Redis API is not found
@@ -94,8 +111,17 @@ class RedisSource
 	}
 
 	public function __call($name, $args) {
-		self::_logQuery(array(strtoupper($name) . ' ' . multi_implode(' ', $args)));
-		return call_user_func_array(array(self::$_redisInstance, $name), $args);
+		$t = microtime(true);
+		$result = call_user_func_array(array(self::$_redisInstance, $name), $args);
+		$queryTime = round((microtime(true) - $t) * 1000, 2);
+		self::_logQuery(array(
+			'command' => strtoupper($name) . ' ' . multi_implode(' ', $args),
+			'time' => $queryTime
+			)
+		);
+		self::$_totalTime += $queryTime;
+		self::$_totalQueries++;
+		return $result;
 	}
 
 /**
@@ -115,8 +141,12 @@ class RedisSource
  *
  * @return array An array of queries
  */
-	public static function logs() {
-		return self::$_logs;
+	public static function getLogs() {
+		return array(
+			'count' => self::$_totalQueries,
+			'time' => self::$_totalTime,
+			'logs' => self::$_logs
+		);
 	}
 
 }
