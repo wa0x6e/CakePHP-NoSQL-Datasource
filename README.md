@@ -59,7 +59,7 @@ This is just a very basic example, but you can store entire object in Redis (via
 * [Download](https://github.com/kamisama/DebugKitEx/zipball/master) and drop the *NoSql* folder in your *Vendor* directory.  
 Or you can clone it directly with  
 
-		git clone git://github.com/kamisama/CakePHP-NoSQL-Datasource.git yourapp/Vendor/
+		git clone git://github.com/kamisama/CakePHP-NoSQL-Datasource.git yourapp/Vendor/NoSql
 * Import it in your application, by putting the following at the beginning of your *AppModel.php* :
 	
 		App::import('Vendor', 'NoSql/NoSql');
