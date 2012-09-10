@@ -56,7 +56,10 @@ This is just a very basic example, but you can store entire object in Redis (via
 
 ###Install###
 
-* Drop the *Vendor/NoSql* folder in your *Vendor* directory.
+* [Download](https://github.com/kamisama/DebugKitEx/zipball/master) and drop the *NoSql* folder in your *Vendor* directory.  
+Or you can clone it directly with  
+
+		git clone git://github.com/kamisama/CakePHP-NoSQL-Datasource.git yourapp/Vendor/
 * Import it in your application, by putting the following at the beginning of your *AppModel.php* :
 	
 		App::import('Vendor', 'NoSql/NoSql');
@@ -75,11 +78,13 @@ doesn't let me do that. I you want to view all your nosql queries, see my other 
 
 ##Changelog
 
-###**v.0.4** [2012-07-02] 
+###**v.0.4** [2012-09-09] 
 
-* [new] Fallback to Redisent when PHPRedis is not installed
+* [new] Add query time in logs
+* [fix] Restructure folder tree to facilitate git cloning
 
-###**v.0.3** [2012-07-02] 
+
+###**v.0.3** [2012-08-30] 
 
 * [change] Code formatting
 
