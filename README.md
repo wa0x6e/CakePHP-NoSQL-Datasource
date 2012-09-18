@@ -78,6 +78,10 @@ doesn't let me do that. I you want to view all your nosql queries, see my other 
 
 ##Changelog
 
+###**v.0.4.1** [2012-09-18] 
+
+* [fix] Remove DataSourceNotFoundException class, already defined in Cake core
+
 ###**v.0.4** [2012-09-09] 
 
 * [new] Add query time in logs
