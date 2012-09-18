@@ -20,14 +20,7 @@
  * @license 	MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-/**
- * Exception to be thrown when the nosql layer is not found
- * in the app/Vendor/Nosql/ directory
- *
- * @package app.Vendor.NoSql
- */
-class DataSourceNotFoundException extends Exception {
-}
+
 
 /**
  * NoSql Interface for others NoSql layers
