@@ -78,6 +78,10 @@ doesn't let me do that. I you want to view all your nosql queries, see my other 
 
 ##Changelog
 
+###**v.0.5.1** [2012-10-01] 
+
+* [fix] Fix `getLogs()` that was always returning null
+
 ###**v.0.5** [2012-10-01] 
 
 * [new] Get logs from all datasources with `Nosql::getLogs()`

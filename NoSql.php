@@ -71,7 +71,7 @@ class NoSql
 		foreach (self::$_sources as $name => $source) {
 			$logs[$name] = $source->getLogs();
 		}
-		return array();
+		return $logs;
 	}
 
 /**
