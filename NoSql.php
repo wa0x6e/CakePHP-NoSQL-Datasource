@@ -60,6 +60,20 @@ class NoSql
 		}
 	}
 
+
+/**
+ * Return logs from all NoSql datasource
+ *
+ * @return array
+ */
+	public static function getLogs() {
+		$logs = array();
+		foreach (self::$_sources as $name => $source) {
+			$logs[$name] = $source->getLogs();
+		}
+		return array();
+	}
+
 /**
  * Instanciate a nosql layer
  *
